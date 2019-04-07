@@ -17,7 +17,7 @@ class List extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      filtered: nextProps.items
+      filtered: nextProps.items.reverse()
     });
   }
 
@@ -36,7 +36,7 @@ class List extends Component {
       // based on the search terms
       newList = currentList.filter(item => {
         // change current item to lowercase
-        const lc = item.toLowerCase();
+        const lc = item.note.toLowerCase();
         // change search term to lowercase
         const filter = e.target.value.toLowerCase();
         // check to see if the current list item includes the search term
@@ -46,7 +46,7 @@ class List extends Component {
       });
     } else {
       // If the search bar is empty, set newList to original task list
-      newList = this.props.items;
+      newList = this.props.items
     }
     // Set the filtered state based on what our rules added to newList
     this.setState({
@@ -65,18 +65,18 @@ class List extends Component {
         />
         <ul>
           {this.state.filtered.map(item => (
-            <article className="media">
+            <article className="media" key={item._id}>
               <figure className="media-left" />
               <div className="media-content">
                 <div className="content">
-                  <li key={item}>
-                    {item} &nbsp;
-                  </li>
+                  <li>{item.note} &nbsp;</li>
                 </div>
               </div>
               <div className="media-right">
-                <button className="delete"
-                  onClick={() => this.props.delete(item)}/>
+                <button
+                  className="delete"
+                  onClick={() => this.props.delete(item)}
+                />
               </div>
             </article>
           ))}

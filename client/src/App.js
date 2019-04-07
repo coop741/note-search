@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
 import Header from "./components/Header";
-// import Action from "./components/Action";
-// import Options from "./components/Options";
-// import Counter from "./components/Counter";
 import AddOption from "./components/AddOption";
 import List from "./components/List";
-
+import axios from "axios"
 
 import "bulma/css/bulma.css";
 
@@ -15,12 +12,17 @@ class App extends Component {
     super(props);
     this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
     this.handlePick = this.handlePick.bind(this);
-    this.handleAddOption = this.handleAddOption.bind(this);
+    // this.handleAddOption = this.handleAddOption.bind(this);
     this.handleDeleteOption = this.handleDeleteOption.bind(this);
+    this.getOptions = this.getOptions.bind(this);
 
     this.state = {
       options: props.options
     };
+  }
+
+  componentDidMount() {
+    this.getOptions();
   }
 
   handleDeleteOptions() {
@@ -40,25 +42,50 @@ class App extends Component {
     alert(option);
   }
 
-  handleAddOption(option) {
-    if (!option) {
-      return "Enter valid value to add to item";
-    } else if (this.state.options.indexOf(option) > -1) {
-      return "This option already exists";
-    } else {
-      this.setState(prevState => ({
-        // options: prevState.options.concat([option])
-        options: [option].concat(prevState.options)
-      }));
-    }
-  }
+  // handleAddOption(option) {
+  //   if (!option) {
+  //     return "Enter valid value to add to item";
+  //   } else if (this.state.options.indexOf(option) > -1) {
+  //     return "This option already exists";
+  //   } else {
+  //     this.setState(prevState => ({
+  //       // options: prevState.options.concat([option])
+  //       options: [option].concat(prevState.options)
+  //     }));
+  //   }
+  // }
 
-  handleDeleteOption(optionToRemove) {
-    this.setState(prevState => ({
-      // only removes option. If true, it would only keep removed option
-      options: prevState.options.filter(option => optionToRemove !== option)
-    }));
-  }
+  // handleDeleteOption(optionToRemove) {
+  //   this.setState(prevState => ({
+  //     // only removes option. If true, it would only keep removed option
+  //     options: prevState.options.filter(option => optionToRemove !== option)
+  //   }));
+  // }
+  handleDeleteOption = note => {
+    axios
+      .delete(`/api/notes/${note._id}`)
+      .then(res => {
+        if (res.data) {
+          this.getOptions();
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
+  getOptions = () => {
+    axios
+      .get("/api/notes")
+      .then(res => {
+        if (res.data) {
+          this.setState({
+            options: res.data
+          });
+          console.log("res", res);
+          console.log("state", this.state.options);
+        }
+      })
+      .catch(err => console.log(err));
+  };
 
   render() {
     const title = "List Search";
@@ -70,7 +97,7 @@ class App extends Component {
           <section className="section">
             <Header title={title} subtitle={subtitle} />
           </section>
-            <AddOption handleAddOption={this.handleAddOption} />
+          <AddOption getOptions={this.getOptions} />
           <section className="section">
             <List items={this.state.options} delete={this.handleDeleteOption} />
             {/* <Action
@@ -91,10 +118,10 @@ class App extends Component {
 
 App.defaultProps = {
   options: [
-    "Description: Sets the name you want attached to your commit transaction. Command: $ git config--global user.name[name]",
-    "Description: Install git on Debian - based linux. Command: sudo apt-get install git",
-    "Description: Creates a new local repository with the specified name. Command: git init [project-name]",
-    "Description: Lists all local branches in the current repository. Command: git branch"
+    // "Description: Sets the name you want attached to your commit transaction. Command: $ git config--global user.name[name]",
+    // "Description: Install git on Debian - based linux. Command: sudo apt-get install git",
+    // "Description: Creates a new local repository with the specified name. Command: git init [project-name]",
+    // "Description: Lists all local branches in the current repository. Command: git branch"
   ]
 };
 
