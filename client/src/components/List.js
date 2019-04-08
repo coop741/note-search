@@ -36,13 +36,15 @@ class List extends Component {
       // based on the search terms
       newList = currentList.filter(item => {
         // change current item to lowercase
-        const lc = item.note.toLowerCase();
+        const lc = item.noteDesc.toLowerCase();
+        const cc = item.category.toLowerCase();
+        const mc = item.noteCommand.toLowerCase();
         // change search term to lowercase
         const filter = e.target.value.toLowerCase();
         // check to see if the current list item includes the search term
         // If it does, it will be added to newList. Using lowercase eliminates
         // issues with capitalization in search terms and search content
-        return lc.includes(filter);
+        return lc.includes(filter) || cc.includes(filter) || mc.includes(filter);
       });
     } else {
       // If the search bar is empty, set newList to original task list
@@ -69,7 +71,10 @@ class List extends Component {
               <figure className="media-left" />
               <div className="media-content">
                 <div className="content">
-                  <li>{item.note} &nbsp;</li>
+                  {/* <li>{item.noteDesc} &nbsp;</li> */}
+                  <p>Category: {item.category}</p>
+                  <p>Description: {item.noteDesc}</p>
+                  <p>Command: {item.noteCommand}</p>
                 </div>
               </div>
               <div className="media-right">
